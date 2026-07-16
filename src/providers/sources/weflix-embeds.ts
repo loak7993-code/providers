@@ -86,7 +86,7 @@ export const vidsrcEmbedScraper = makeIframeSource({
 export const videasyEmbedScraper = makeIframeSource({
   id: 'videasy-embed',
   name: 'Videasy',
-  rank: 300,
+  rank: 302,
   movieUrl: (id) => `https://player.videasy.to/movie/${id}?overlay=true`,
   showUrl: (id, s, e) => `https://player.videasy.to/tv/${id}/${s}/${e}?overlay=true`,
 });
@@ -102,7 +102,7 @@ export const vidkingEmbedScraper = makeIframeSource({
 export const vidlinkIframeScraper = makeIframeSource({
   id: 'vidlink-iframe',
   name: 'VidLink Player',
-  rank: 290,
+  rank: 292,
   movieUrl: (id) =>
     `https://vidlink.pro/movie/${id}?primaryColor=c45454&secondaryColor=a2a2a2&iconColor=eefdec&poster=true&title=true&nextbutton=false&player=jw&autoplay=true`,
   showUrl: (id, s, e) =>
