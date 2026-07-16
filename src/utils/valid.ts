@@ -33,6 +33,10 @@ export function isValidStream(stream: Stream | undefined): boolean {
     if (validQualities.length === 0) return false;
     return true;
   }
+  if (stream.type === 'iframe') {
+    if (!stream.url) return false;
+    return true;
+  }
 
   // unknown file type
   return false;
@@ -74,6 +78,9 @@ export async function validatePlayableStream(
 ): Promise<Stream | null> {
   if (SKIP_VALIDATION_CHECK_IDS.includes(sourcererId)) return stream;
   if (stream.skipValidation) return stream;
+
+  // iframe streams can't be validated via fetch — the iframe handles playback
+  if (stream.type === 'iframe') return stream;
 
   const alwaysUseNormalFetch = UNPROXIED_VALIDATION_CHECK_IDS.includes(sourcererId);
 

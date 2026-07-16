@@ -102,6 +102,20 @@ import { warezcdnScraper } from './sources/warezcdn';
 import { watchanimeworldScraper } from './sources/watchanimeworld';
 import { wecimaScraper } from './sources/wecima';
 import { zunimeScraper } from './sources/zunime';
+import {
+  embedsuEmbedScraper,
+  superEmbedScraper,
+  twoembedEmbedScraper,
+  vidapiEmbedScraper,
+  vidcoreEmbedScraper,
+  vidkingEmbedScraper,
+  vidlinkIframeScraper,
+  vidnestEmbedScraper,
+  vidsrcccEmbedScraper,
+  vidsrcEmbedScraper,
+  vidsrcruEmbedScraper,
+  videasyEmbedScraper,
+} from './sources/weflix-embeds';
 
 export function gatherAllSources(): Array<Sourcerer> {
   // all sources are gathered here
@@ -151,6 +165,22 @@ export function gatherAllSources(): Array<Sourcerer> {
     vidlinkScraper,
     vidrockScraper,
     watchanimeworldScraper,
+    // WeFlix_v2-style iframe embeds — these return iframe streams that the
+    // Snapflix player renders as <iframe> elements. Each iframe's own player
+    // handles CDN resolution, Cloudflare, and required headers internally,
+    // which is why they work where raw-mp4 scraping fails.
+    vidsrcEmbedScraper,
+    videasyEmbedScraper,
+    vidkingEmbedScraper,
+    vidlinkIframeScraper,
+    vidcoreEmbedScraper,
+    twoembedEmbedScraper,
+    embedsuEmbedScraper,
+    vidapiEmbedScraper,
+    vidsrcccEmbedScraper,
+    vidsrcruEmbedScraper,
+    superEmbedScraper,
+    vidnestEmbedScraper,
   ];
 }
 

@@ -34,4 +34,10 @@ export type HlsBasedStream = StreamCommon & {
   proxyDepth?: 0 | 1 | 2;
 };
 
-export type Stream = FileBasedStream | HlsBasedStream;
+export type IframeStream = Omit<StreamCommon, 'headers' | 'preferredHeaders'> & {
+  type: 'iframe';
+  url: string;
+  sandbox?: string[]; // sandbox flags for the iframe element
+};
+
+export type Stream = FileBasedStream | HlsBasedStream | IframeStream;
