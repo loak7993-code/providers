@@ -67,7 +67,7 @@ export const ConsumetScraper = makeSourcerer({
   id: 'consumet',
   name: 'Consumet (Anime) 🔥',
   rank: 5,
-  disabled: true,
+  disabled: false,
   flags: [flags.CORS_ALLOWED],
   scrapeShow: consumetScraper,
 });
