@@ -1,7 +1,9 @@
 node_modules/
-/lib
+/lib-dist-legacy
 coverage
 .env
 .eslintcache
 /lib-obf
 .DS_Store
+v8-compile-cache-0/
+corepack-cache/
