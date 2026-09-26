@@ -186,6 +186,12 @@ export declare type HlsBasedStream = StreamCommon & {
     proxyDepth?: 0 | 1 | 2;
 };
 
+declare type IframeStream = Omit<StreamCommon, 'headers' | 'preferredHeaders'> & {
+    type: 'iframe';
+    url: string;
+    sandbox?: string[];
+};
+
 declare type IndividualScraperEvents = {
     update?: (evt: UpdateEvent) => void;
 };
@@ -342,7 +348,7 @@ export declare interface SourceRunnerOptions {
     disableOpensubtitles?: boolean;
 }
 
-export declare type Stream = FileBasedStream | HlsBasedStream;
+export declare type Stream = FileBasedStream | HlsBasedStream | IframeStream;
 
 declare type StreamCommon = {
     id: string;
