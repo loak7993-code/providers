@@ -79,7 +79,6 @@ function makeIframeSource(config: EmbedSourceConfig) {
 
 export const vidsrcEmbedScraper = makeIframeSource({
   id: 'vidsrc-embed',
-  disabled: true, // iframe: shows its own branded player
   name: 'VidSrc Embed',
   rank: 305,
   movieUrl: (id) => `https://vsembed.su/embed/movie/${id}`,
@@ -88,7 +87,6 @@ export const vidsrcEmbedScraper = makeIframeSource({
 
 export const videasyEmbedScraper = makeIframeSource({
   id: 'videasy-embed',
-  disabled: true, // iframe: shows its own branded player
   name: 'Videasy',
   rank: 302,
   movieUrl: (id) => `https://player.videasy.to/movie/${id}?overlay=true`,
