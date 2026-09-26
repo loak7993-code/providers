@@ -2,6 +2,7 @@ import { flags } from '@/entrypoint/utils/targets';
 import { SourcererOutput, makeSourcerer } from '@/providers/base';
 import { MovieScrapeContext, ShowScrapeContext } from '@/utils/context';
 import { NotFoundError } from '@/utils/errors';
+import { createM3U8ProxyUrl } from '@/utils/proxy';
 
 /**
  * vidsrc.sh — universal source.
@@ -177,6 +178,13 @@ async function comboScraper(ctx: MovieScrapeContext | ShowScrapeContext): Promis
   }
 
   ctx.progress(95);
+  // segments reject browser-origin requests (403 on Origin header), so the
+  // playlist must be routed through the app's m3u8 proxy; on targets with a
+  // local proxy available (extension/native) createM3U8ProxyUrl returns the
+  // original URL
+  const streamHeaders: Record<string, string> = playable.host
+    ? { Referer: `${playable.host}/`, Origin: playable.host }
+    : {};
   return {
     embeds: [],
     stream: [
@@ -184,11 +192,9 @@ async function comboScraper(ctx: MovieScrapeContext | ShowScrapeContext): Promis
         id: 'vidsrcsh',
         type: 'hls',
         flags: [flags.CORS_ALLOWED],
-        playlist: playable.url,
+        playlist: createM3U8ProxyUrl(playable.url, ctx.features, streamHeaders),
         captions: [],
-        headers: playable.host
-          ? { Referer: `${playable.host}/`, Origin: playable.host }
-          : {},
+        headers: streamHeaders,
       },
     ],
   };

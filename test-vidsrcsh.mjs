@@ -1,4 +1,5 @@
-const { makeProviders, makeSimpleProxyFetcher, makeStandardFetcher, targets } = await import("./lib/index.js");
+const { makeProviders, makeSimpleProxyFetcher, makeStandardFetcher, targets, setM3U8ProxyUrl } = await import("./lib/index.js");
+setM3U8ProxyUrl("http://localhost:9876");
 const fetcher = makeStandardFetcher(fetch);
 const proxied = makeSimpleProxyFetcher("http://localhost:9876/", globalThis.fetch);
 const stack = makeProviders({ fetcher, proxiedFetcher: proxied, target: targets.BROWSER });
