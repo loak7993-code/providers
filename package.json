@@ -22,18 +22,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/p-stream/providers.git"
+    "url": "git+https://github.com/loak7993-code/streamviva-providers.git"
   },
   "keywords": [
-    "p-stream",
-    "providers"
+    "streamviva",
+    "providers",
+    "streaming"
   ],
-  "author": "p-stream",
+  "author": "StreamViva",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/p-stream/providers/issues"
+    "url": "https://github.com/loak7993-code/streamviva-providers/issues"
   },
-  "homepage": "https://p-stream.github.io/providers/",
+  "homepage": "https://github.com/loak7993-code/streamviva-providers#readme",
   "scripts": {
     "build": "vite build",
     "cli": "vite-node ./src/dev-cli/index.ts",
