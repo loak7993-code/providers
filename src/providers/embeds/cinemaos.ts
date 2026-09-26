@@ -11,7 +11,7 @@ export function makeCinemaOSEmbed(server: string, rank: number) {
     name: `${server.charAt(0).toUpperCase() + server.slice(1)}`,
     rank,
     flags: [flags.CORS_ALLOWED],
-    disabled: true,
+    disabled: false,
     async scrape(ctx): Promise<EmbedOutput> {
       const query = JSON.parse(ctx.url);
       const { tmdbId, type, season, episode } = query;
@@ -98,13 +98,13 @@ const CINEMAOS_SERVERS = [
   //   'kage',
 ];
 
-export const cinemaosEmbeds = CINEMAOS_SERVERS.map((server, i) => makeCinemaOSEmbed(server, 300 - i));
+export const cinemaosEmbeds = CINEMAOS_SERVERS.map((server, i) => makeCinemaOSEmbed(server, 290 - i));
 
 export function makeCinemaOSHexaEmbed(id: string, rank: number = 100) {
   return makeEmbed({
     id: `cinemaos-hexa-${id}`,
     name: `Hexa ${id.charAt(0).toUpperCase() + id.slice(1)}`,
-    disabled: true,
+    disabled: false,
     rank,
     flags: [flags.CORS_ALLOWED],
     async scrape(ctx): Promise<EmbedOutput> {

@@ -1,6 +1,9 @@
 import { Embed, Sourcerer } from '@/providers/base';
+import { AnimekaiScraper } from './embeds/animekai';
+import { animekaiScraper } from './sources/animekai';
+import { FedAPIScraper } from './sources/fedapi';
+import { FedAPIDBScraper } from './sources/fedapidb';
 import { doodScraper } from '@/providers/embeds/dood';
-import { febboxMp4Scraper } from '@/providers/embeds/febbox/mp4';
 import { filemoonScraper } from '@/providers/embeds/filemoon';
 import { mixdropScraper } from '@/providers/embeds/mixdrop';
 import { serverMirrorEmbed } from '@/providers/embeds/server-mirrors';
@@ -28,7 +31,6 @@ import {
 } from './embeds/autoembed';
 import { cinemaosEmbeds } from './embeds/cinemaos';
 import { closeLoadScraper } from './embeds/closeload';
-import { ConsumetEmbeds } from './embeds/consumet';
 import { droploadScraper } from './embeds/dropload';
 import { filelionsScraper } from './embeds/filelions';
 import { mp4hydraServer1Scraper, mp4hydraServer2Scraper } from './embeds/mp4hydra';
@@ -74,7 +76,6 @@ import { animeflvScraper } from './sources/animeflv';
 import { animetsuScraper } from './sources/animetsu';
 import { cinehdplusScraper } from './sources/cinehdplus-es';
 import { coitusScraper } from './sources/coitus';
-import { ConsumetScraper } from './sources/consumet/index';
 import { cuevana3Scraper } from './sources/cuevana3';
 import { debridScraper } from './sources/debrid';
 import { embedsuScraper } from './sources/embedsu';
@@ -101,6 +102,20 @@ import { warezcdnScraper } from './sources/warezcdn';
 import { watchanimeworldScraper } from './sources/watchanimeworld';
 import { wecimaScraper } from './sources/wecima';
 import { zunimeScraper } from './sources/zunime';
+import {
+  embedsuEmbedScraper,
+  superEmbedScraper,
+  twoembedEmbedScraper,
+  vidapiEmbedScraper,
+  vidcoreEmbedScraper,
+  vidkingEmbedScraper,
+  vidlinkIframeScraper,
+  vidnestEmbedScraper,
+  vidsrcccEmbedScraper,
+  vidsrcEmbedScraper,
+  vidsrcruEmbedScraper,
+  videasyEmbedScraper,
+} from './sources/weflix-embeds';
 
 export function gatherAllSources(): Array<Sourcerer> {
   // all sources are gathered here
@@ -124,12 +139,14 @@ export function gatherAllSources(): Array<Sourcerer> {
     slidemoviesScraper,
     vidapiClickScraper,
     coitusScraper,
-    ConsumetScraper,
     streamboxScraper,
     nunflixScraper,
     EightStreamScraper,
     wecimaScraper,
     animeflvScraper,
+    animekaiScraper,
+    FedAPIScraper,
+    FedAPIDBScraper,
     pirxcyScraper,
     vidsrcvipScraper,
     rgshowsScraper,
@@ -148,6 +165,22 @@ export function gatherAllSources(): Array<Sourcerer> {
     vidlinkScraper,
     vidrockScraper,
     watchanimeworldScraper,
+    // WeFlix_v2-style iframe embeds — these return iframe streams that the
+    // Snapflix player renders as <iframe> elements. Each iframe's own player
+    // handles CDN resolution, Cloudflare, and required headers internally,
+    // which is why they work where raw-mp4 scraping fails.
+    vidsrcEmbedScraper,
+    videasyEmbedScraper,
+    vidkingEmbedScraper,
+    vidlinkIframeScraper,
+    vidcoreEmbedScraper,
+    twoembedEmbedScraper,
+    embedsuEmbedScraper,
+    vidapiEmbedScraper,
+    vidsrcccEmbedScraper,
+    vidsrcruEmbedScraper,
+    superEmbedScraper,
+    vidnestEmbedScraper,
   ];
 }
 
@@ -214,7 +247,6 @@ export function gatherAllEmbeds(): Array<Embed> {
     droploadScraper,
     supervideoScraper,
     voeScraper,
-    febboxMp4Scraper,
-    ...ConsumetEmbeds,
+    AnimekaiScraper,
   ];
 }

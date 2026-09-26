@@ -36,26 +36,25 @@ async function consumetScraper(ctx: ShowScrapeContext): Promise<SourcererOutput>
 
   // Parse embeds
   const query = {
-    episodeId: targetEpisode.id,
-    category: 'sub',
+    episodeId: `${bestMatch.id}$${ctx.media.season.number}$${targetEpisode.id}$both`,
   };
 
   const embeds = [
     {
       embedId: 'consumet-vidcloud',
-      url: JSON.stringify({ ...query }),
+      url: JSON.stringify({ ...query, server: 'vidcloud' }),
     },
     {
       embedId: 'consumet-streamsb',
-      url: JSON.stringify({ ...query }),
+      url: JSON.stringify({ ...query, server: 'streamsb' }),
     },
     {
       embedId: 'consumet-vidstreaming',
-      url: JSON.stringify({ ...query }),
+      url: JSON.stringify({ ...query, server: 'vidstreaming' }),
     },
     {
       embedId: 'consumet-streamtape',
-      url: JSON.stringify({ ...query }),
+      url: JSON.stringify({ ...query, server: 'streamtape' }),
     },
   ];
 
@@ -67,7 +66,7 @@ async function consumetScraper(ctx: ShowScrapeContext): Promise<SourcererOutput>
 export const ConsumetScraper = makeSourcerer({
   id: 'consumet',
   name: 'Consumet (Anime) 🔥',
-  rank: 42,
+  rank: 5,
   disabled: false,
   flags: [flags.CORS_ALLOWED],
   scrapeShow: consumetScraper,

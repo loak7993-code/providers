@@ -28,7 +28,7 @@ export const warezcdnembedMp4Scraper = makeEmbed({
   // method no longer works
   rank: 82,
   flags: [flags.CORS_ALLOWED],
-  disabled: true,
+  disabled: false,
   async scrape(ctx) {
     const decryptedId = await getDecryptedId(ctx);
 

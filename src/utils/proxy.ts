@@ -23,12 +23,17 @@ export function getM3U8ProxyUrl(): string {
 }
 
 export function requiresProxy(stream: Stream): boolean {
+  // iframe streams don't need proxying — the iframe handles everything
+  if (stream.type === 'iframe') return false;
   if (!stream.flags.includes(flags.CORS_ALLOWED) || !!(stream.headers && Object.keys(stream.headers).length > 0))
     return true;
   return false;
 }
 
 export function setupProxy(stream: Stream): Stream {
+  // iframe streams don't need proxying
+  if (stream.type === 'iframe') return stream;
+
   const headers = stream.headers && Object.keys(stream.headers).length > 0 ? stream.headers : undefined;
 
   const options = {

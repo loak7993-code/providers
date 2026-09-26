@@ -21,7 +21,7 @@ const providers = [
   },
   {
     id: 'server-10',
-    rank: 82,
+    rank: 81,
   },
   {
     id: 'server-1',
@@ -96,7 +96,7 @@ function embed(provider: { id: string; rank: number; name?: string; disabled?: b
         .map((word) => word[0].toUpperCase() + word.slice(1))
         .join(' '),
     // disabled: provider.disabled,
-    disabled: true,
+    disabled: false,
     rank: provider.rank,
     flags: [flags.CORS_ALLOWED],
     async scrape(ctx) {

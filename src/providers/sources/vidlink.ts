@@ -40,26 +40,26 @@ async function comboScraper(ctx: ShowScrapeContext | MovieScrapeContext): Promis
       ? `${VIDLINK_BASE}/movie/${encryptedId}`
       : `${VIDLINK_BASE}/tv/${encryptedId}/${ctx.media.season.number}/${ctx.media.episode.number}`;
 
-  const vidlinkResponse = await ctx.proxiedFetcher<string>(apiUrl, {
+  const vidlinkRaw = await ctx.proxiedFetcher<string>(apiUrl, {
     headers,
   });
 
-  if (!vidlinkResponse) {
+  if (!vidlinkRaw) {
     throw new NotFoundError('No response from vidlink API');
   }
 
   ctx.progress(60);
 
-  let vidlinkData;
+  let vidlinkData: { stream?: any };
   try {
-    vidlinkData = JSON.parse(vidlinkResponse);
-  } catch (e) {
-    throw new NotFoundError('Invalid JSON response from vidlink API');
+    vidlinkData = typeof vidlinkRaw === 'string' ? JSON.parse(vidlinkRaw) : vidlinkRaw;
+  } catch {
+    throw new NotFoundError('Invalid JSON from vidlink API');
   }
 
   ctx.progress(80);
 
-  if (!vidlinkData || !vidlinkData.stream) {
+  if (!vidlinkData.stream) {
     throw new NotFoundError('No stream data found in vidlink response');
   }
 
@@ -104,8 +104,8 @@ async function comboScraper(ctx: ShowScrapeContext | MovieScrapeContext): Promis
 
 export const vidlinkScraper = makeSourcerer({
   id: 'vidlink',
-  name: 'VidLink',
-  rank: 240,
+  name: 'VidLink 🔥',
+  rank: 310,
   disabled: false,
   flags: [],
   scrapeMovie: comboScraper,
