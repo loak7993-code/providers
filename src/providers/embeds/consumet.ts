@@ -81,7 +81,7 @@ function makeConsumetEmbed(server: string, rank: number) {
 
 export const ConsumetEmbeds = [
   makeConsumetEmbed('vidcloud', 200),
-  makeConsumetEmbed('streamsb', 190),
+  makeConsumetEmbed('streamsb', 191),
   makeConsumetEmbed('vidstreaming', 185),
-  makeConsumetEmbed('streamtape', 180),
+  makeConsumetEmbed('streamtape', 181),
 ];

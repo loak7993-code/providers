@@ -9,6 +9,7 @@ export const febboxMp4Scraper = makeEmbed({
   id: 'febbox-mp4',
   name: 'Febbox (MP4)',
   rank: 190,
+  flags: [flags.CORS_ALLOWED],
   async scrape(ctx) {
     const { type, id, season, episode } = parseInputUrl(ctx.url);
     let apiQuery: object | null = null;
