@@ -131,7 +131,7 @@ async function comboScraper(ctx: MovieScrapeContext | ShowScrapeContext): Promis
     imdb: imdbId,
     stream_urls: '',
   };
-  if (isShow) {
+  if (isShow && ctx.media.type === 'show') {
     params.season = String(ctx.media.season.number);
     params.episode = String(ctx.media.episode.number);
   }
@@ -150,7 +150,7 @@ async function comboScraper(ctx: MovieScrapeContext | ShowScrapeContext): Promis
     urls = su.filter(Boolean);
   } else if (typeof su === 'string' && su.length > 0) {
     if (!api.vs) throw new NotFoundError('encrypted stream_urls without decryptor');
-    urls = await decryptStreamUrls(api.vs.wasm_url, api.vs.wasm, su);
+    urls = await decryptStreamUrls(api.vs.wasm_url ?? '', api.vs.wasm, su);
   } else {
     throw new NotFoundError('no stream urls returned');
   }

@@ -159,7 +159,7 @@ export const vidrockScraper = makeSourcerer({
   name: 'Granite',
   rank: 170,
   disabled: false,
-  flags: [],
+  flags: [flags.CORS_ALLOWED],
   scrapeMovie: comboScraper,
   scrapeShow: comboScraper,
 });

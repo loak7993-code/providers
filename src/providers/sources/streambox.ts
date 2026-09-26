@@ -22,11 +22,11 @@ async function comboScraper(ctx: ShowScrapeContext | MovieScrapeContext): Promis
   const data = await apiRes;
 
   const streams: Record<string, string> = {};
-  data.url.forEach((stream: any) => {
+  (data.url ?? []).forEach((stream: any) => {
     streams[stream.resulation] = stream.link;
   });
 
-  const captions = data.tracks.map((track: any) => ({
+  const captions = (data.tracks ?? []).map((track: any) => ({
     id: track.lang,
     url: track.url,
     language: track.code,
@@ -98,7 +98,7 @@ export const streamboxScraper = makeSourcerer({
   id: 'streambox',
   name: 'StreamBox',
   rank: 119,
-  disabled: false,
+  disabled: true, // vidjoy.pro parked/dead
   flags: [flags.CORS_ALLOWED],
   scrapeMovie: comboScraper,
   scrapeShow: comboScraper,

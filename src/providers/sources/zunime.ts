@@ -1,6 +1,7 @@
 import { SourcererOutput, makeSourcerer } from '@/providers/base';
 import { getAnilistIdFromMedia } from '@/utils/anilist';
 import { MovieScrapeContext, ShowScrapeContext } from '@/utils/context';
+import { flags } from '@/entrypoint/utils/targets';
 
 async function comboScraper(ctx: ShowScrapeContext | MovieScrapeContext): Promise<SourcererOutput> {
   const anilistId = await getAnilistIdFromMedia(ctx, ctx.media);
@@ -45,6 +46,6 @@ export const zunimeScraper = makeSourcerer({
   id: 'zunime',
   name: 'Zunime',
   rank: 114,
-  flags: [],
+  flags: [flags.CORS_ALLOWED],
   scrapeShow: comboScraper,
 });

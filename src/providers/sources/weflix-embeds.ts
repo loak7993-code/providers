@@ -1,3 +1,4 @@
+import { flags } from '@/entrypoint/utils/targets';
 import { SourcererOutput, makeSourcerer } from '@/providers/base';
 import { MovieScrapeContext, ShowScrapeContext } from '@/utils/context';
 import { IframeStream } from '@/providers/streams';
@@ -17,6 +18,7 @@ interface EmbedSourceConfig {
   id: string;
   name: string;
   rank: number;
+  disabled?: boolean;
   movieUrl: (tmdbId: string) => string;
   showUrl: (tmdbId: string, season: number, episode: number) => string;
   sandbox?: string[];
@@ -43,7 +45,7 @@ function makeIframeSource(config: EmbedSourceConfig) {
       url,
       ...(config.sandbox ? { sandbox: config.sandbox } : {}),
       // iframe streams are played by the iframe itself — no proxy, no validation
-      flags: [],
+      flags: [flags.CORS_ALLOWED],
       // captions are not exposed by these embeds
       captions: [],
     };
@@ -58,8 +60,8 @@ function makeIframeSource(config: EmbedSourceConfig) {
     id: config.id,
     name: config.name,
     rank: config.rank,
-    disabled: false,
-    flags: [],
+    disabled: config.disabled ?? false,
+    flags: [flags.CORS_ALLOWED],
     scrapeMovie: comboScraper,
     scrapeShow: comboScraper,
   });
@@ -93,6 +95,7 @@ export const videasyEmbedScraper = makeIframeSource({
 
 export const vidkingEmbedScraper = makeIframeSource({
   id: 'vidking-embed',
+  disabled: true, // vidking.net dead
   name: 'VidKing',
   rank: 295,
   movieUrl: (id) => `https://www.vidking.net/embed/movie/${id}?autoPlay=true`,
@@ -111,6 +114,7 @@ export const vidlinkIframeScraper = makeIframeSource({
 
 export const vidcoreEmbedScraper = makeIframeSource({
   id: 'vidcore-embed',
+  disabled: true, // vidcore.org dead
   name: 'VidCore',
   rank: 285,
   movieUrl: (id) =>
@@ -129,6 +133,7 @@ export const twoembedEmbedScraper = makeIframeSource({
 
 export const embedsuEmbedScraper = makeIframeSource({
   id: 'embedsu-embed',
+  disabled: true, // embed.su dead
   name: 'EmbedSu Player',
   rank: 275,
   movieUrl: (id) => `https://embed.su/embed/movie/${id}`,
@@ -145,6 +150,7 @@ export const vidapiEmbedScraper = makeIframeSource({
 
 export const vidsrcccEmbedScraper = makeIframeSource({
   id: 'vidsrccc-embed',
+  disabled: true, // vidsrc.cc dead
   name: 'VidSrc.cc',
   rank: 265,
   movieUrl: (id) => `https://vidsrc.cc/v2/embed/movie/${id}?autoPlay=true`,

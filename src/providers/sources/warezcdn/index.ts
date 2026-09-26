@@ -5,6 +5,7 @@ import { warezcdnembedMp4Scraper } from '@/providers/embeds/warezcdn/mp4';
 import { warezPlayerScraper } from '@/providers/embeds/warezcdn/warezplayer';
 import { ScrapeContext } from '@/utils/context';
 import { NotFoundError } from '@/utils/errors';
+import { flags } from '@/entrypoint/utils/targets';
 
 import { warezcdnBase } from './common';
 // import { cachedSeasonsRes } from './types';
@@ -49,14 +50,16 @@ export const warezcdnScraper = makeSourcerer({
   name: 'WarezCDN',
   disabled: false,
   rank: 115,
-  flags: [],
+  flags: [flags.CORS_ALLOWED],
   scrapeMovie: async (ctx) => {
     if (!ctx.media.imdbId) throw new NotFoundError('This source requires IMDB id.');
     const serversPage = await ctx.proxiedFetcher<string>(`/filme/${ctx.media.imdbId}`, {
       baseUrl: warezcdnBase,
     });
 
-    const [, id, servers] = serversPage.match(/let\s+data\s*=\s*'\[\s*\{\s*"id":"([^"]+)".*?"servers":"([^"]+)"/)!;
+    const warezMatch = serversPage.match(/let\s+data\s*=\s*'\[\s*\{\s*"id":"([^"]+)".*?"servers":"([^"]+)"/);
+    const id = warezMatch?.[1];
+    const servers = warezMatch?.[2];
     if (!id || !servers) throw new NotFoundError('Failed to find episode id');
     ctx.progress(40);
 

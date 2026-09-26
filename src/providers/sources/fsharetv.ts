@@ -1,4 +1,5 @@
 import { load } from 'cheerio';
+import { flags } from '@/entrypoint/utils/targets';
 
 import { SourcererOutput, makeSourcerer } from '@/providers/base';
 import { FileBasedStream } from '@/providers/streams';
@@ -76,7 +77,7 @@ async function comboScraper(ctx: ShowScrapeContext | MovieScrapeContext): Promis
       {
         id: 'primary',
         type: 'file',
-        flags: [],
+        flags: [flags.CORS_ALLOWED],
         headers: {
           referer: 'https://fsharetv.co',
         },
@@ -91,6 +92,6 @@ export const fsharetvScraper = makeSourcerer({
   id: 'fsharetv',
   name: 'FshareTV',
   rank: 201,
-  flags: [],
+  flags: [flags.CORS_ALLOWED],
   scrapeMovie: comboScraper,
 });

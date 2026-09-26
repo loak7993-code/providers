@@ -1,133 +1,103 @@
-import { load } from 'cheerio';
+import { flags } from '@/entrypoint/utils/targets';
 
 import { SourcererEmbed, makeSourcerer } from '@/providers/base';
 import { MovieScrapeContext, ShowScrapeContext } from '@/utils/context';
 import { NotFoundError } from '@/utils/errors';
 
-import { IframeSourceResult, SearchResult } from './types';
+const ridoMoviesBase = 'https://ridomovie.to';
 
-const ridoMoviesBase = `https://ridomovies.tv`;
-const ridoMoviesApiBase = `${ridoMoviesBase}/core/api`;
+interface RidoSearchItem {
+  id: number;
+  type: 'movie' | 'tv';
+  title: string;
+  original_title?: string;
+  slug: string;
+  release_date?: string;
+}
 
-const normalizeTitle = (title: string): string => {
-  return title
+interface RidoSearchResponse {
+  status: boolean;
+  data: RidoSearchItem[];
+}
+
+const normalizeTitle = (title: string): string =>
+  title
     .toLowerCase()
     .trim()
     .replace(/[^\w\s]/g, '')
     .replace(/\s+/g, ' ');
-};
 
+/**
+ * RidoMovies (ridomovie.to — moved from ridomovies.tv, API moved from
+ * /core/api to /api).
+ * Flow: /api/search?q= -> match by title+year+type -> fetch the watch page
+ * (movie/{slug} or tv/{slug}/season-N/episode-M) -> extract the closeload
+ * embed from the iframe data-src -> hand off to the closeload embed scraper.
+ */
 const universalScraper = async (ctx: MovieScrapeContext | ShowScrapeContext) => {
-  const searchResult = await ctx.proxiedFetcher<SearchResult>('/search', {
-    baseUrl: ridoMoviesApiBase,
-    query: {
-      q: ctx.media.title,
-    },
+  const searchResult = await ctx.proxiedFetcher<RidoSearchResponse>('/api/search', {
+    baseUrl: ridoMoviesBase,
+    query: { q: ctx.media.title },
   });
 
-  if (!searchResult.data?.items || searchResult.data.items.length === 0) {
+  if (!searchResult?.data || searchResult.data.length === 0) {
     throw new NotFoundError('No search results found');
   }
 
-  const mediaData = searchResult.data.items.map((movieEl) => {
-    const name = movieEl.title;
-    const year = movieEl.contentable.releaseYear;
-    const fullSlug = movieEl.fullSlug;
-    return { name, year, fullSlug };
-  });
-
+  const wantedType = ctx.media.type === 'show' ? 'tv' : 'movie';
+  const searchYear = String(ctx.media.releaseYear);
   const normalizedSearchTitle = normalizeTitle(ctx.media.title);
-  const searchYear = ctx.media.releaseYear.toString();
 
-  let targetMedia = mediaData.find((m) => normalizeTitle(m.name) === normalizedSearchTitle && m.year === searchYear);
+  const candidates = searchResult.data.filter((i) => i.type === wantedType);
+  let target =
+    candidates.find(
+      (i) => normalizeTitle(i.title) === normalizedSearchTitle && (i.release_date ?? '').startsWith(searchYear),
+    ) ??
+    candidates.find(
+      (i) =>
+        (i.release_date ?? '').startsWith(searchYear) &&
+        (normalizeTitle(i.title).includes(normalizedSearchTitle) ||
+          normalizedSearchTitle.includes(normalizeTitle(i.title))),
+    ) ??
+    candidates.find((i) => normalizeTitle(i.title) === normalizedSearchTitle);
 
-  if (!targetMedia) {
-    targetMedia = mediaData.find((m) => {
-      const normalizedName = normalizeTitle(m.name);
-      return (
-        m.year === searchYear &&
-        (normalizedName.includes(normalizedSearchTitle) || normalizedSearchTitle.includes(normalizedName))
-      );
-    });
-  }
-
-  if (!targetMedia?.fullSlug) {
-    throw new NotFoundError('No matching media found');
-  }
+  if (!target?.slug) throw new NotFoundError('No matching media found');
 
   ctx.progress(40);
 
-  let iframeSourceUrl = `/${targetMedia.fullSlug}/videos`;
+  const watchPath =
+    ctx.media.type === 'show'
+      ? `/tv/${target.slug}/season-${ctx.media.season.number}/episode-${ctx.media.episode.number}`
+      : `/movie/${target.slug}`;
 
-  if (ctx.media.type === 'show') {
-    const showPageResult = await ctx.proxiedFetcher<string>(`/${targetMedia.fullSlug}`, {
-      baseUrl: ridoMoviesBase,
-    });
-
-    const fullEpisodeSlug = `season-${ctx.media.season.number}/episode-${ctx.media.episode.number}`;
-    const regexPattern = new RegExp(
-      `\\\\"id\\\\":\\\\"(\\d+)\\\\"(?=.*?\\\\"fullSlug\\\\":\\\\"[^"]*${fullEpisodeSlug}[^"]*\\\\")`,
-      'g',
-    );
-
-    const matches = [...showPageResult.matchAll(regexPattern)];
-    const episodeIds = matches.map((match) => match[1]);
-
-    if (episodeIds.length === 0) {
-      throw new NotFoundError('Episode not found');
-    }
-
-    const episodeId = episodeIds[episodeIds.length - 1];
-    iframeSourceUrl = `/episodes/${episodeId}/videos`;
-  }
-
-  const iframeSource = await ctx.proxiedFetcher<IframeSourceResult>(iframeSourceUrl, {
-    baseUrl: ridoMoviesApiBase,
-  });
-  if (!iframeSource.data || iframeSource.data.length === 0) {
-    throw new NotFoundError('No video sources found');
-  }
-
-  const iframeSource$ = load(iframeSource.data[0].url);
-  const iframeUrl = iframeSource$('iframe').attr('data-src');
-
-  if (!iframeUrl) {
-    throw new NotFoundError('No iframe URL found');
-  }
-
-  ctx.progress(60);
-
-  const embeds: SourcererEmbed[] = [];
-
-  let embedId = 'closeload';
-
-  if (iframeUrl.includes('ridoo')) {
-    embedId = 'ridoo';
-  }
-
-  embeds.push({
-    embedId,
-    url: iframeUrl,
+  const watchPage = await ctx.proxiedFetcher<string>(watchPath, {
+    baseUrl: ridoMoviesBase,
   });
 
-  ctx.progress(80);
+  ctx.progress(70);
 
-  if (embeds.length === 0) {
-    throw new NotFoundError('No supported embeds found');
-  }
+  // the page carries the closeload iframe in data-src attributes
+  const iframeMatch = watchPage.match(
+    /closeload\.top\/(?:video\/embed|embed-\{url\})\/([A-Za-z0-9_-]+)/,
+  );
+  // fall back to any closeload url form
+  const fallbackMatch = watchPage.match(/closeload\.top\/[A-Za-z0-9\/_-]*([A-Za-z0-9_-]{8,})/);
+  const videoId = iframeMatch?.[1] ?? fallbackMatch?.[1];
+  if (!videoId) throw new NotFoundError('No embed found on watch page');
+
+  const embedUrl = `https://closeload.top/video/embed/${videoId}/`;
 
   ctx.progress(90);
 
-  return {
-    embeds,
-  };
+  const embeds: SourcererEmbed[] = [{ embedId: 'closeload', url: embedUrl }];
+  return { embeds };
 };
 
 export const ridooMoviesScraper = makeSourcerer({
   id: 'ridomovies',
   name: 'RidoMovies',
   rank: 203,
-  flags: [],
+  flags: [flags.CORS_ALLOWED],
   disabled: false,
   scrapeMovie: universalScraper,
   scrapeShow: universalScraper,

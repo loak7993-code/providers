@@ -1,6 +1,7 @@
 import { SourcererOutput, makeSourcerer } from '@/providers/base';
 import { MovieScrapeContext, ShowScrapeContext } from '@/utils/context';
 import { NotFoundError } from '@/utils/errors';
+import { flags } from '@/entrypoint/utils/targets';
 
 const API_BASE = 'https://enc-dec.app/api';
 const VIDLINK_BASE = 'https://vidlink.pro/api/b';
@@ -95,7 +96,7 @@ async function comboScraper(ctx: ShowScrapeContext | MovieScrapeContext): Promis
         qualities: stream.qualities || {},
         playlist: stream.playlist,
         captions,
-        flags: [],
+        flags: [flags.CORS_ALLOWED],
         headers: stream.headers || headers,
       },
     ],
@@ -107,7 +108,7 @@ export const vidlinkScraper = makeSourcerer({
   name: 'VidLink 🔥',
   rank: 310,
   disabled: false,
-  flags: [],
+  flags: [flags.CORS_ALLOWED],
   scrapeMovie: comboScraper,
   scrapeShow: comboScraper,
 });
