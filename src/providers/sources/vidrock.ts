@@ -158,7 +158,7 @@ export const vidrockScraper = makeSourcerer({
   id: 'vidrock',
   name: 'Granite',
   rank: 170,
-  disabled: false,
+  disabled: true,
   flags: [flags.CORS_ALLOWED],
   scrapeMovie: comboScraper,
   scrapeShow: comboScraper,

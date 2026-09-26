@@ -79,6 +79,7 @@ function makeIframeSource(config: EmbedSourceConfig) {
 
 export const vidsrcEmbedScraper = makeIframeSource({
   id: 'vidsrc-embed',
+  disabled: true, // iframe: shows its own branded player
   name: 'VidSrc Embed',
   rank: 305,
   movieUrl: (id) => `https://vsembed.su/embed/movie/${id}`,
@@ -87,6 +88,7 @@ export const vidsrcEmbedScraper = makeIframeSource({
 
 export const videasyEmbedScraper = makeIframeSource({
   id: 'videasy-embed',
+  disabled: true, // iframe: shows its own branded player
   name: 'Videasy',
   rank: 302,
   movieUrl: (id) => `https://player.videasy.to/movie/${id}?overlay=true`,
@@ -104,6 +106,7 @@ export const vidkingEmbedScraper = makeIframeSource({
 
 export const vidlinkIframeScraper = makeIframeSource({
   id: 'vidlink-iframe',
+  disabled: true, // iframe: shows its own branded player
   name: 'VidLink Player',
   rank: 292,
   movieUrl: (id) =>
@@ -125,6 +128,7 @@ export const vidcoreEmbedScraper = makeIframeSource({
 
 export const twoembedEmbedScraper = makeIframeSource({
   id: '2embed-embed',
+  disabled: true, // iframe: shows its own branded player
   name: '2Embed',
   rank: 280,
   movieUrl: (id) => `https://2embed.cc/embed/${id}`,
@@ -142,6 +146,7 @@ export const embedsuEmbedScraper = makeIframeSource({
 
 export const vidapiEmbedScraper = makeIframeSource({
   id: 'vidapi-embed',
+  disabled: true, // iframe: shows its own branded player
   name: 'VidApi',
   rank: 270,
   movieUrl: (id) => `https://vidapi.qzz.io/movie/${id}`,
@@ -160,6 +165,7 @@ export const vidsrcccEmbedScraper = makeIframeSource({
 
 export const vidsrcruEmbedScraper = makeIframeSource({
   id: 'vidsrcru-embed',
+  disabled: true, // iframe: shows its own branded player
   name: 'VidSrc.ru',
   rank: 260,
   movieUrl: (id) => `https://vidsrc-embed.ru/embed/movie/${id}?autoPlay=true`,
@@ -169,6 +175,7 @@ export const vidsrcruEmbedScraper = makeIframeSource({
 
 export const superEmbedScraper = makeIframeSource({
   id: 'super-embed',
+  disabled: true, // iframe: shows its own branded player
   name: 'SuperEmbed',
   rank: 255,
   movieUrl: (id) => `https://multiembed.mov/?video_id=${id}&tmdb=1&autoPlay=true`,
@@ -177,6 +184,7 @@ export const superEmbedScraper = makeIframeSource({
 
 export const vidnestEmbedScraper = makeIframeSource({
   id: 'vidnest-embed',
+  disabled: true, // iframe: shows its own branded player
   name: 'VidNest Player',
   rank: 250,
   movieUrl: (id) => `https://vidnest.fun/movie/${id}`,

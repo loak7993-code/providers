@@ -235,6 +235,7 @@ export const FedAPIDBScraper = makeSourcerer({
   id: 'fedapidb',
   name: 'FED DB 🔥',
   rank: 299,
+  disabled: true, // requires user token
   flags: [flags.CORS_ALLOWED],
   scrapeMovie: comboScraper,
   scrapeShow: comboScraper,

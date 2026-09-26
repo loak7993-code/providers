@@ -26,7 +26,7 @@ export const vidnestScraper = makeSourcerer({
   name: 'Vidnest',
   rank: 117,
   flags: [flags.CORS_ALLOWED],
-  disabled: false, // The streams cause the site to crash
+  disabled: true, // The streams cause the site to crash
   scrapeMovie: comboScraper,
   scrapeShow: comboScraper,
 });

@@ -121,7 +121,7 @@ export const fullhdfilmizleScraper = makeSourcerer({
   id: 'fullhdfilmizle',
   name: 'FullHDFilmizle (Turkish)',
   rank: 6,
-  disabled: false,
+  disabled: true,
   flags: [flags.CORS_ALLOWED],
   scrapeMovie,
 });
