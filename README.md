@@ -1,6 +1,6 @@
-# @p-stream/providers
+# @streamviva/providers
 
-package that holds all providers of P-Stream.
+package that holds all providers of StreamViva.
 Feel free to use for your own projects.
 
 features:
@@ -8,7 +8,7 @@ features:
 - scrape popular streaming websites
 - works in both browser and server-side
 
-Visit documentation here: https://p-stream.github.io/providers/
+Visit documentation here: https://streamviva.github.io/providers/
 
 ## How to run locally or test my changes
 

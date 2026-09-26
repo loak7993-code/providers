@@ -1,7 +1,7 @@
 {
-  "name": "@p-stream/providers",
+  "name": "@streamviva/providers",
   "version": "3.2.0",
-  "description": "Package that contains all the providers of p-stream",
+  "description": "Package that contains all the providers of StreamViva",
   "type": "module",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
