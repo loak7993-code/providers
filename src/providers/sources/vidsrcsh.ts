@@ -178,13 +178,11 @@ async function comboScraper(ctx: MovieScrapeContext | ShowScrapeContext): Promis
   }
 
   ctx.progress(95);
-  // segments reject browser-origin requests (403 on Origin header), so the
-  // playlist must be routed through the app's m3u8 proxy; on targets with a
-  // local proxy available (extension/native) createM3U8ProxyUrl returns the
-  // original URL
-  const streamHeaders: Record<string, string> = playable.host
-    ? { Referer: `${playable.host}/`, Origin: playable.host }
-    : {};
+  // IMPORTANT: no Referer/Origin headers — the mirror hosts 403 any request
+  // carrying them on segments; the IP-bound token is the only auth needed.
+  // Segments also reject browser-origin requests, so route the playlist
+  // through the app's m3u8 proxy (createM3U8ProxyUrl returns the original
+  // URL on targets with a local proxy: extension/native)
   return {
     embeds: [],
     stream: [
@@ -192,9 +190,9 @@ async function comboScraper(ctx: MovieScrapeContext | ShowScrapeContext): Promis
         id: 'vidsrcsh',
         type: 'hls',
         flags: [flags.CORS_ALLOWED],
-        playlist: createM3U8ProxyUrl(playable.url, ctx.features, streamHeaders),
+        playlist: createM3U8ProxyUrl(playable.url, ctx.features, {}),
         captions: [],
-        headers: streamHeaders,
+        headers: {},
       },
     ],
   };
